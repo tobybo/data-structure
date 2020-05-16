@@ -20,7 +20,7 @@ class CMinHeap
 			m_dir = 0;
 		};
 		CMinHeap(T _k ){
-			m_root = new struct HeapNode(nullptr,nullptr,_k);
+			m_root = new struct HeapNode(_k);
 		};
 		~CMinHeap();
 
@@ -30,7 +30,7 @@ class CMinHeap
 			struct HeapNode* left;
 			struct HeapNode* right;
 			T key;
-			HeapNode(T _key):key(_key){};
+			HeapNode(T _key):left(nullptr),right(nullptr),key(_key){};
 		};
 
 	public:
