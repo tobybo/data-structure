@@ -22,6 +22,7 @@ int main(int argn, char* const* argv){
     cout<<"costtime: "<<clock() - start<<endl;
     //for(int i = 0;i<len;i++)
     //    cout<<arr[i]<<endl;
+	delete []arr;
     return 0;
 }
 

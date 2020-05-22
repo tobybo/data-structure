@@ -4,7 +4,7 @@
 
 #include "global_fun.h"
 
-const int MAX_RAND_NUM = 1000000;
+const int MAX_RAND_NUM = 10000000;
 
 int* get_rand_arr(int len){
     time_t t;
