@@ -6,24 +6,30 @@
 
 #include"global_fun.h"
 
-const int size = 10*1000*1000;
+//extern const int MAX_RAND_NUM;
+//const int size = 10*1000*1000;
+const int size = MAX_RAND_NUM;
 
 void sort_fask_sentry_front(int *arr, int size); //前面的哨兵先走
 void sort_fask_sentry_back(int *arr, int size);   //后面的哨兵先走
 void sort_fask_wakeng(int *arr, int size);
 void sort_fast_pointer(int *arr, int size);
+void sort_fast_lua(int *arr, int low, int upper);
 
 void swap(int* arr, int i, int j);
 int get_max_k(int *arr,int size, int k);
+bool sort_cmp(int *arr, int i, int j);
 
 void test_find_k();
 void test_sentry_front();
 void test_sentry_back();
 void test_wakeng();
 void test_pointer();
+void test_lua();
 
 int main()
 {
+	test_lua();
 	test_pointer();
 	test_wakeng();
 	//test_find_k();
@@ -379,6 +385,60 @@ void sort_fast_pointer(int *arr, int size)
 	}
 }
 
+void sort_fast_lua(int* arr, int low, int upper)
+{
+	while(low < upper)
+	{
+		int i,j;
+		if(sort_cmp(arr,upper,low))
+		{
+			swap(arr,low,upper);
+		}
+		if(upper - low == 1) return; //only tow elems
+		i = (low + upper)/2;
+		if(sort_cmp(arr,i,low)) //cmp with first
+		{
+			swap(arr,low,i);
+		}
+		else if(sort_cmp(arr,upper,i)) //cmp with last
+		{
+			swap(arr,i,upper);
+		}
+		if(upper - low == 2) return; //only three elems
+		swap(arr,i,upper-1);
+		i = low;
+		j = upper - 1;
+		int pivot = j;
+		for(;;)
+		{
+			while(sort_cmp(arr,++i,pivot)); //find pos from low + 1 to upper - 1 which val is bigger than arr[pivot]
+			while(sort_cmp(arr,pivot,--j)); //find pos from upper - 2 to low which val is smaller than arr[pivot]
+			if(i > j) //not found
+				break;
+			swap(arr,i,j); //change tow sentrys
+		}
+		swap(arr,i,pivot); //mv pivot to a pos, which pos's left vals are all less than arr[pivot] and the right vals are all bigger than arr[pivot]
+		if(i - low < upper - i)
+		{
+			j = i - 1;
+			i = low;
+			low = j + 2; //means old_i + 1
+		}
+		else
+		{
+			i = i + 1;
+			j = upper;
+			upper = i - 2;
+		}
+		sort_fast_lua(arr,i,j);
+	}
+}
+
+bool sort_cmp(int *arr, int i, int j)
+{
+	return arr[i] < arr[j];
+}
+
 void swap(int* arr, int i, int j)
 {
 	if(i == j)
@@ -386,6 +446,12 @@ void swap(int* arr, int i, int j)
 	arr[i] = arr[i]^arr[j];
 	arr[j] = arr[i]^arr[j];
 	arr[i] = arr[i]^arr[j];
+	/*std::cout<<"-----------------"<<std::endl;*/
+	//for(i = 0; i < size; i++)
+	//{
+		//std::cout<<arr[i]<<" ";
+	//}
+	/*std::cout<<std::endl;*/
 }
 
 //-------------------------test func-------------------
@@ -463,6 +529,26 @@ void test_pointer()
 	sort_fast_pointer(arr,size);
 	std::cout<<"cost time: "<<clock() - start<<std::endl;
 	/*for(i = 0; i < size; i++)*/
+	//{
+		//std::cout<<arr[i]<<" ";
+	//}
+	/*std::cout<<std::endl;*/
+}
+
+void test_lua()
+{
+	int *arr = get_rand_arr(size);
+	int i;
+	/*for(i = 0; i < size; i++)*/
+	//{
+		//std::cout<<arr[i]<<" ";
+	//}
+	/*std::cout<<std::endl;*/
+	std::cout<<"arr已经装填完毕，装填数量为: "<<size<<std::endl;
+	time_t start = clock();
+	sort_fast_lua(arr,0,size - 1);
+	std::cout<<"cost time: "<<clock() - start<<std::endl;
+	//for(i = 0; i < size; i++)
 	//{
 		//std::cout<<arr[i]<<" ";
 	//}

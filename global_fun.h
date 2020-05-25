@@ -3,7 +3,8 @@
 
 int* get_rand_arr(int len);
 
-const int test_extend_const = 10;
+//const int test_extend_const = 10;
+extern const int MAX_RAND_NUM;
 
 
 
